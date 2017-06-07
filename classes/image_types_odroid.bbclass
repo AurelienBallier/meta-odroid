@@ -21,6 +21,12 @@ UBOOT_BIN_POS_odroid-xu ?= "63"
 UBOOT_TZSW_POS_odroid-xu ?= "2111"
 UBOOT_ENV_POS_odroid-xu ?= "2625"
 
+#odroid-u3
+UBOOT_B2_POS_odroid-u3 ?= "${UBOOT_B2_POS_odroid-xu}"
+UBOOT_BIN_POS_odroid-u3 ?= "${UBOOT_BIN_POS_odroid-xu}"
+UBOOT_TZSW_POS_odroid-u3 ?= "${UBOOT_TZSW_POS_odroid-xu}"
+UBOOT_ENV_POS_odroid-u3 ?= "${UBOOT_ENV_POS_odroid-xu}"
+
 #odroid-xu3
 UBOOT_B2_POS_odroid-xu3 ?= "${UBOOT_B2_POS_odroid-xu}"
 UBOOT_BIN_POS_odroid-xu3 ?= "${UBOOT_BIN_POS_odroid-xu}"
@@ -48,6 +54,7 @@ BOOTDD_VOLUME_ID ?= "${MACHINE}"
 
 # Set alignment to 1MB [in KiB]
 IMAGE_ROOTFS_ALIGNMENT_odroid-xu = "4096"
+IMAGE_ROOTFS_ALIGNMENT_odroid-u3 = "${IMAGE_ROOTFS_ALIGNMENT_odroid-xu}"
 IMAGE_ROOTFS_ALIGNMENT_odroid-xu3 = "${IMAGE_ROOTFS_ALIGNMENT_odroid-xu}"
 IMAGE_ROOTFS_ALIGNMENT_odroid-xu3-lite = "${IMAGE_ROOTFS_ALIGNMENT_odroid-xu}"
 IMAGE_ROOTFS_ALIGNMENT_odroid-xu4 = "${IMAGE_ROOTFS_ALIGNMENT_odroid-xu}"
@@ -69,6 +76,7 @@ IMAGE_DEPENDS_sdcard = "parted-native:do_populate_sysroot \
 
 SDCARD = "${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.sdcard"
 SDCARD_ROOTFS ?= "${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.ext4"
+SDCARD_GENERATION_COMMAND_odroid-u3= "generate_odroid_xu_sdcard"
 SDCARD_GENERATION_COMMAND_odroid-xu3= "generate_odroid_xu_sdcard"
 SDCARD_GENERATION_COMMAND_odroid-xu4= "generate_odroid_xu_sdcard"
 SDCARD_GENERATION_COMMAND_odroid-xu3-lite= "generate_odroid_xu_sdcard"
@@ -200,10 +208,10 @@ generate_odroid_xu_sdcard () {
 
 	case "${IMAGE_BOOTLOADER}" in
 		u-boot)
-            dd if=${DEPLOY_DIR_IMAGE}/bl1.bin.hardkernel of=${SDCARD} conv=notrunc seek=${UBOOT_B1_POS}
-            dd if=${DEPLOY_DIR_IMAGE}/bl2.bin.hardkernel of=${SDCARD} conv=notrunc seek=${UBOOT_B2_POS}
+            dd if=${DEPLOY_DIR_IMAGE}/bl1.HardKernel of=${SDCARD} conv=notrunc seek=${UBOOT_B1_POS}
+            dd if=${DEPLOY_DIR_IMAGE}/bl2.HardKernel of=${SDCARD} conv=notrunc seek=${UBOOT_B2_POS}
             dd if=${DEPLOY_DIR_IMAGE}/u-boot-dtb.${UBOOT_SUFFIX} of=${SDCARD} conv=notrunc seek=${UBOOT_BIN_POS}
-            dd if=${DEPLOY_DIR_IMAGE}/tzsw.bin.hardkernel of=${SDCARD} conv=notrunc seek=${UBOOT_TZSW_POS}
+            dd if=${DEPLOY_DIR_IMAGE}/tzsw.HardKernel of=${SDCARD} conv=notrunc seek=${UBOOT_TZSW_POS}
             dd if=/dev/zero of=${SDCARD} seek=${UBOOT_ENV_POS} conv=notrunc count=32 bs=512
 		;;
 

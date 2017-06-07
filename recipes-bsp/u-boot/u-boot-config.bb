@@ -9,7 +9,12 @@ inherit uboot-boot-scr
 
 USE_BOOTSRC ?= "0"
 
-SRC_URI = "file://base.cmd"
+SRC_URI = "\
+           file://base.cmd \
+           file://bl1.HardKernel \
+           file://bl2.HardKernel \
+           file://tzsw.HardKernel \
+          "
 
 S = "${WORKDIR}"
 
@@ -34,6 +39,11 @@ do_install () {
 
 do_deploy () {
     install -d  ${DEPLOY_DIR_IMAGE}
+
+    install -m 644 ${WORKDIR}/bl1.HardKernel ${DEPLOY_DIR_IMAGE}/
+    install -m 644 ${WORKDIR}/bl2.HardKernel ${DEPLOY_DIR_IMAGE}/
+    install -m 644 ${WORKDIR}/tzsw.HardKernel ${DEPLOY_DIR_IMAGE}/
+
     if [ -n "${UBOOT_ENV}" ]
     then
         install -m 644 ${D}/${UBOOT_ENV_BINARY} ${DEPLOY_DIR_IMAGE}/${UBOOT_ENV_IMAGE}
@@ -45,4 +55,4 @@ do_deploy () {
 addtask deploy before do_package after do_install
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
-COMPATIBLE_MACHINE = "(odroid-c2|odroid-xu3|odroid-xu4|odroid-xu3-lite)"
+COMPATIBLE_MACHINE = "(odroid-u3|odroid-c2|odroid-xu3|odroid-xu4|odroid-xu3-lite)"
